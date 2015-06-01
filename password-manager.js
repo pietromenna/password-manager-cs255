@@ -58,7 +58,11 @@ var keychain = function() {
     * Return Type: void
     */
   keychain.init = function(password) {
+    var passwd = string_to_bitarray(password);
     priv.data.version = "CS 255 Password Manager v1.0";
+    priv.secrets.aeskey = bitarray_slice(KDF(SHA256(passwd),"test"),0,128);
+    priv.secrets.hmackey = bitarray_slice(KDF(SHA256(passwd),"test"),128,255);
+    priv.data.cipher = setup_cipher(priv.secrets.aeskey);
   };
 
   /**
