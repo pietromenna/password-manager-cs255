@@ -84,8 +84,8 @@ var keychain = function() {
     * Return Type: boolean
     */
   keychain.load = function(password, repr, trusted_data_check) {
-    if (SHA256(string_to_bitarray(repr)) != trusted_data_check) throw "SHA256 does not match!";
-
+    if (bitarray_to_base64(SHA256(string_to_bitarray(repr))) != trusted_data_check) 
+      throw "SHA256 does not match!";
   };
 
   /**
@@ -103,7 +103,7 @@ var keychain = function() {
     */ 
   keychain.dump = function() {
     if (ready != true) return null;
-    return [JSON.stringify(keychain), SHA256(string_to_bitarray(JSON.stringify(keychain)))];
+    return [JSON.stringify(keychain), bitarray_to_base64(SHA256(string_to_bitarray(JSON.stringify(keychain))))];
   }
 
   /**
