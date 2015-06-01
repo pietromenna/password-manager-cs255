@@ -88,7 +88,16 @@ var keychain = function() {
       throw "SHA256 does not match!";
     keychain.init(password);
     keychain = JSON.parse(repr);
+    try {
+      for(var keys in keychain) {
+        dec_gcm(priv.data.cipher, base64_to_bitarray(keychain[keys]));
+      }
+    }
+    catch (e) {
+      return false
+    }
     ready = true;
+    return true;
   };
 
   /**
