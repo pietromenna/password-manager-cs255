@@ -154,7 +154,13 @@ var keychain = function() {
     * Return Type: boolean
   */
   keychain.remove = function(name) {
-    throw "Not implemented!";
+    if (ready != true)
+      throw "Not Ready!";
+    if (keychain[bitarray_to_base64(HMAC(priv.secrets.hmackey, name))]) {
+      delete keychain[bitarray_to_base64(HMAC(priv.secrets.hmackey, name))];
+      return true;
+    }
+    return false;
   }
 
   return keychain;
