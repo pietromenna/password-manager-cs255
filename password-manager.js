@@ -86,6 +86,9 @@ var keychain = function() {
   keychain.load = function(password, repr, trusted_data_check) {
     if (bitarray_to_base64(SHA256(string_to_bitarray(repr))) != trusted_data_check) 
       throw "SHA256 does not match!";
+    keychain.init(password);
+    keychain = JSON.parse(repr);
+    ready = true;
   };
 
   /**
