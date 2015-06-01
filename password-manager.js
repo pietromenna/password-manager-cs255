@@ -101,7 +101,8 @@ var keychain = function() {
     * Return Type: array
     */ 
   keychain.dump = function() {
-    throw "Not implemented!";
+    if (ready != true) return null;
+    return [JSON.stringify(keychain), SHA256(string_to_bitarray(JSON.stringify(keychain)))];
   }
 
   /**
