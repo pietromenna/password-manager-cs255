@@ -84,7 +84,8 @@ var keychain = function() {
     * Return Type: boolean
     */
   keychain.load = function(password, repr, trusted_data_check) {
-    throw "Not implemented!";
+    if (SHA256(string_to_bitarray(repr)) != trusted_data_check) throw "SHA256 does not match!";
+
   };
 
   /**
@@ -116,12 +117,11 @@ var keychain = function() {
     * Return Type: string
     */
   keychain.get = function(name) {
-    if (keychain[bitarray_to_base64(HMAC(priv.secrets.hmackey, name))] === undefined )
+    var keychain_position = keychain[bitarray_to_base64(HMAC(priv.secrets.hmackey, name))];
+    if (keychain_position === undefined )
       return null;
     else {
-      var test = keychain[bitarray_to_base64(HMAC(priv.secrets.hmackey, name))];
-      var dec = dec_gcm(priv.data.cipher, base64_to_bitarray(test));
-      return bitarray_to_string(dec);
+      return bitarray_to_string(dec_gcm(priv.data.cipher, base64_to_bitarray(keychain_position)));
     }
 
   }
