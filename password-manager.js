@@ -115,7 +115,14 @@ var keychain = function() {
     * Return Type: string
     */
   keychain.get = function(name) {
-    throw "Not implemented!";
+    if (!bitarray_to_base64(HMAC(priv.secrets.hmackey, name)))
+      return null;
+    else {
+      var test = keychain[bitarray_to_base64(HMAC(priv.secrets.hmackey, name))];
+      var dec = dec_gcm(priv.data.cipher, base64_to_bitarray(test));
+      return bitarray_to_string(dec);
+    }
+
   }
 
   /** 
@@ -133,7 +140,7 @@ var keychain = function() {
     if (ready != true)
       throw "Not Ready!";
     var keyName = bitarray_to_base64(HMAC(priv.secrets.hmackey, name));
-    var keyValue = bitarray_to_base64(enc_gcm(priv.data.cipher, value));
+    var keyValue = bitarray_to_base64(enc_gcm(priv.data.cipher, string_to_bitarray(value)));
     keychain[keyName] = keyValue;
   }
 
