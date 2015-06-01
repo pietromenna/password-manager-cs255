@@ -63,6 +63,7 @@ var keychain = function() {
     priv.secrets.aeskey = bitarray_slice(KDF(SHA256(passwd),"test"),0,128);
     priv.secrets.hmackey = bitarray_slice(KDF(SHA256(passwd),"test"),128,255);
     priv.data.cipher = setup_cipher(priv.secrets.aeskey);
+    ready = true;
   };
 
   /**
@@ -129,7 +130,11 @@ var keychain = function() {
   * Return Type: void
   */
   keychain.set = function(name, value) {
-    throw "Not implemented!";
+    if (ready != true)
+      throw "Not Ready!";
+    var keyName = bitarray_to_base64(HMAC(priv.secrets.hmackey, name));
+    var keyValue = bitarray_to_base64(enc_gcm(priv.data.cipher, value));
+    keychain[keyName] = keyValue;
   }
 
   /**
