@@ -115,7 +115,7 @@ var keychain = function() {
     * Return Type: string
     */
   keychain.get = function(name) {
-    if (!bitarray_to_base64(HMAC(priv.secrets.hmackey, name)))
+    if (keychain[bitarray_to_base64(HMAC(priv.secrets.hmackey, name))] === undefined )
       return null;
     else {
       var test = keychain[bitarray_to_base64(HMAC(priv.secrets.hmackey, name))];
